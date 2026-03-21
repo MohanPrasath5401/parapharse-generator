@@ -1,12 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Paraphrase Generator Test</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            margin: 40px auto; 
+            max-width: 600px; 
+            padding: 20px; 
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        p {
+            margin-bottom: 30px;
+            color: #555;
+        }
+        input { 
+            padding: 12px; 
+            width: 320px; 
+            font-size: 16px; 
+            margin-bottom: 20px;
+        }
+        button { 
+            padding: 12px 24px; 
+            font-size: 16px; 
+            cursor: pointer;
+            margin: 10px;
+        }
+        #qrcode { 
+            margin: 40px auto;   /* Centers horizontally */
+            display: inline-block; /* For proper centering */
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        #downloadBtn {
+            display: none; /* Hidden until QR is generated */
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+    </style>
 </head>
-<body style="font-family:sans-serif; padding:40px; background:#f0f8ff;">
-  <h1>Hello! This is working 🎉</h1>
-  <p>If you see this → GitHub Pages is now serving index.html correctly.</p>
-  <p>Now go back and put your real interface code here.</p>
+<body>
+    <h1>Simple QR Code Generator</h1>
+    <p>Enter a link (URL) below and click Generate to create a QR code.</p>
+    <input type="text" id="urlInput" placeholder="https://example.com">
+    <button onclick="generateQR()">Generate QR Code</button>
+    <div id="qrcode"></div>
+    <button id="downloadBtn" onclick="downloadQR()">Download QR Code</button>
+
+    <script>
+        let qrCodeInstance; // To store the QR code object
+
+        function generateQR() {
+            const url = document.getElementById('urlInput').value;
+            if (url) {
+                document.getElementById('qrcode').innerHTML = ''; // Clear previous QR
+                qrCodeInstance = new QRCode(document.getElementById('qrcode'), {
+                    text: url,
+                    width: 256,
+                    height: 256,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff"
+                });
+                document.getElementById('downloadBtn').style.display = 'inline-block'; // Show download button
+            } else {
+                alert('Please enter a URL!');
+            }
+        }
+
+        function downloadQR() {
+            if (qrCodeInstance) {
+                const canvas = document.getElementById('qrcode').querySelector('canvas'); // Get the canvas
+                const link = document.createElement('a'); // Create a temporary link
+                link.href = canvas.toDataURL('image/png'); // Convert canvas to PNG data URL
+                link.download = 'qr_code.png'; // Set filename
+                link.click(); // Trigger download
+            }
+        }
+    </script>
 </body>
 </html>
